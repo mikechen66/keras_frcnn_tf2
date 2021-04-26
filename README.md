@@ -15,8 +15,9 @@ you can also subscribe their official wechat account:
 This code only support to both TensorFlow 2.3 keras 2.4. If you can fix it, feel free to send me a PR.
 
 ## Requirements
-Basically, this code supports both python2.7 and python3.7, the following package should installed:
-* TensorFlow 2.4
+Basically, this code supports both python2.7 and python3.7, the following package should be installed:
+
+* TensorFlow 2.3
 * Keras 2.4
 * opencv-python==4.1.1.26
 * opencv-contrib-python==4.1.1.26
