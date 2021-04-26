@@ -12,14 +12,14 @@ you can also subscribe their official wechat account:
 
 ## Update
 
-This code only support to keras 2.0.3, the newest version will cause some errors. If you can fix it, feel free to send me a PR.
+This code only support to both TensorFlow 2.3 keras 2.4. If you can fix it, feel free to send me a PR.
 
 ## Requirements
 Basically, this code supports both python2.7 and python3.5, the following package should installed:
-* tensorflow
-* keras
-* scipy
-* cv2
+* TensorFlow 2.4
+* Keras 2.4
+* opencv-python==4.1.1.26
+* opencv-contrib-python==4.1.1.26
 
 ## Out of box model to predict
 
