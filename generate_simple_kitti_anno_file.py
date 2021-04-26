@@ -5,10 +5,17 @@ bounding boxes
 
 Usage:
 
-python2 generate_simple_kitti_anno_file.py \
-/media/jintian/Netac/Datasets/Kitti/object/training/image_2 \
-/media/jintian/Netac/Datasets/Kitti/object/training/label_2
+For Python 3 in the conda environment, please execute the command with 
+changing the new paths. 
+python generate_simple_kitti_anno_file.py \
+/home/mic/Documents/dl-cookbook/keras_frcnn/training/image_2 \
+/home/mic/Documents/dl-cookbook/keras_frcnn/training/label_2
+
+kitti_simple_label.txt is generated as follows. 
+/home/mic/Documents/dl-cookbook/keras_frcnn/kitti_simple_label.txt
 """
+
+
 from __future__ import print_function, division
 import numpy as np
 import os
