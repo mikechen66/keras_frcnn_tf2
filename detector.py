@@ -53,8 +53,8 @@ class FasterRCNNDetector(object):
         # define the RPN, built on the base layers
         num_anchors = len(self.cfg.anchor_box_scales) * len(self.cfg.anchor_box_ratios)
         rpn_layers = nn.rpn(shared_layers, num_anchors)
-        classifier = nn.classifier(feature_map_input, roi_input, self.cfg.num_rois, nb_classes=len(class_mapping),
-                                   trainable=True)
+        classifier = nn.classifier(feature_map_input, roi_input, self.cfg.num_rois, 
+                                   nb_classes=len(class_mapping), trainable=True)
 
         self.model_rpn = Model(img_input, rpn_layers)
         model_classifier_only = Model([feature_map_input, roi_input], classifier)
@@ -76,13 +76,15 @@ class FasterRCNNDetector(object):
         tic = time.time()
 
         X, ratio = format_img(img, self.cfg)
-        if K.image_dim_ordering() == 'tf':
+        # -if K.image_dim_ordering() == 'tf':
+        if K.image_data_format() == 'channels_last': 
             X = np.transpose(X, (0, 2, 3, 1))
         # get the feature maps and output from the RPN
         [Y1, Y2, F] = self.model_rpn.predict(X)
 
         # this is result contains all boxes, which is [x1, y1, x2, y2]
-        result = roi_helpers.rpn_to_roi(Y1, Y2, self.cfg, K.image_dim_ordering(), overlap_thresh=0.7)
+        # -result = roi_helpers.rpn_to_roi(Y1, Y2, self.cfg, K.image_dim_ordering(), overlap_thresh=0.7)
+        result = roi_helpers.rpn_to_roi(Y1, Y2, self.cfg, K.image_data_format(), overlap_thresh=0.7)
 
         # convert from (x1,y1,x2,y2) to (x,y,w,h)
         result[:, 2] -= result[:, 0]
