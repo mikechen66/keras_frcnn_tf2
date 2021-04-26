@@ -2,6 +2,8 @@
 Please go to the webpage of kitti to get the downloading weblink. The following links might be changed with depending 
 on kitti's publisher. 
 
+Please combine the two datasets in the directory of training under keras_frcnn. 
+
 kitti dataset downloads:
 http://www.cvlibs.net/datasets/kitti/eval_object.php
 
