@@ -32,6 +32,8 @@ I have trained a model to predict kitti. I will update a dropbox link here later
 to train a new dataset is also very simple and straight forward. Simply convert your detection label file whatever format into this format:
 
 kitti dataset downloads:
+
+kitti website
 http://www.cvlibs.net/datasets/kitti/eval_object.php
 
 data_object_label_2
