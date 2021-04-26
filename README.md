@@ -31,6 +31,16 @@ I have trained a model to predict kitti. I will update a dropbox link here later
 
 to train a new dataset is also very simple and straight forward. Simply convert your detection label file whatever format into this format:
 
+kitti dataset downloads:
+http://www.cvlibs.net/datasets/kitti/eval_object.php
+
+data_object_label_2
+$ wget https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_label_2.zip
+
+data_object_image_2
+$ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zip
+
+
 ```
 /path/training/image_2/000000.png,712.40,143.00,810.73,307.92,Pedestrian
 /path/training/image_2/000001.png,599.41,156.40,629.75,189.25,Truck
