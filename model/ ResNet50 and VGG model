@@ -4,5 +4,11 @@ Please create a new folder named model under keras_frcnn. It will work as a dire
 
 For the script of test_frcnn_kitti, pleae download the following models(pre-trained weights). 
 
+resnet50_weights_tf_dim_ordering_tf_kernels.h5
+resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5
+
+vgg19_weights_tf_dim_ordering_tf_kernels.h5
+vgg19_weights_tf_dim_ordering_tf_kernels_notop.h5
+
 weblink: 
 https://github.com/fchollet/deep-learning-models/releases/tag/v0.1
