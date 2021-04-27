@@ -24,7 +24,6 @@ from keras_frcnn.simple_parser import get_data
 def train_kitti():
     # config for data argument
     cfg = config.Config()
-
     cfg.use_horizontal_flips = True
     cfg.use_vertical_flips = True
     cfg.rot_90 = True
@@ -32,7 +31,8 @@ def train_kitti():
     cfg.base_net_weights = os.path.join('./model/', nn.get_weight_path())
 
     # TODO: the only file should be changed for other data to train
-    cfg.model_path = './model/kitti_frcnn_last.hdf5'
+    # -cfg.model_path = './model/kitti_frcnn_last.hdf5'
+    cfg.model_path = './model/kitti_frcnn_last.h5'
     cfg.simple_label_file = 'kitti_simple_label.txt'
 
     all_images, classes_count, class_mapping = get_data(cfg.simple_label_file)
@@ -71,7 +71,7 @@ def train_kitti():
 
 
     # -if K.image_dim_ordering() == 'th':
-    if K.image_data_format() == 'channels first':
+    if K.image_data_format() == 'channels_first':
         input_shape_img = (3, None, None)
     else:
         input_shape_img = (None, None, 3)
@@ -114,8 +114,9 @@ def train_kitti():
                              metrics={'dense_class_{}'.format(len(classes_count)): 'accuracy'})
     model_all.compile(optimizer='sgd', loss='mae')
 
+    # Initially train the dataset with 10 epochs and change it to 100 or 1000 after normal running the 10 epochs. 
     # -epoch_length = 1000
-    epoch_lenght = 10
+    epoch_length = 10
     num_epochs = int(cfg.num_epochs)
     iter_num = 0
 
