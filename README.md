@@ -19,7 +19,7 @@ Basically, this code supports both python2.7 and python3.7, the following packag
 
 ## Out of box model to predict
 
-The original author has trained a model to predict kitti. I will update a dropbox link here later. Let's see the result of predict:
+The original author has trained a model to predict kitti. I will update a dropbox link here later. 
 
 
 ## kitti dataset downloads:
