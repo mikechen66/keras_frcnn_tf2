@@ -105,10 +105,10 @@ $ cd ./Documents/keras_frcnn
 1st. Test the default image
 $ python test_frcnn_kitti.py
 
-2nd. Testa a specific iamge 
+2nd. Testa a specific image 
 python test_frcnn_kitti.py -p ./images/00009.png
 
-3rd. Test all images in a specific fileholder 
+3rd. Test all images in a designated fileholder 
 python test_frcnn_kitti.py -p ./images
 ```
 You can also using `-p` to specific single image to predict, or send a path contains many images, our program will automatically recognise that.
