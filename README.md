@@ -32,7 +32,7 @@ http://www.cvlibs.net/datasets/kitti/eval_object.php
 
 data_object_label_2
 
-$ wget https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_label_2.zip
+$ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_label_2.zip
 
 data_object_image_2
 
