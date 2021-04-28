@@ -60,7 +60,7 @@ $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zi
      
      self.model_path = '.model/kitti_frcnn.last.hdf5'
      
-     C.Set base_net_weights name in train_frcnn_kitti.py. 
+     C.Set base_net_weights in train_frcnn_kitti.py. 
      
      try:
      print('loading weights from {}'.format(cfg.base_net_weights))
