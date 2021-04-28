@@ -9,13 +9,13 @@ import copy
 def calc_iou(R, img_data, C, class_mapping):
     bboxes = img_data['bboxes']
     (width, height) = (img_data['width'], img_data['height'])
-    # get image dimensions for resizing
+    # Get image dimensions for resizing
     (resized_width, resized_height) = data_generators.get_new_img_size(width, height, C.im_size)
 
     gta = np.zeros((len(bboxes), 4))
 
     for bbox_num, bbox in enumerate(bboxes):
-        # get the GT box coordinates, and resize to account for image resizing
+        # Get the GT box coordinates, and resize to account for image resizing
         gta[bbox_num, 0] = int(round(bbox['x1'] * (resized_width / float(width)) / C.rpn_stride))
         gta[bbox_num, 1] = int(round(bbox['x2'] * (resized_width / float(width)) / C.rpn_stride))
         gta[bbox_num, 2] = int(round(bbox['y1'] * (resized_height / float(height)) / C.rpn_stride))
@@ -25,7 +25,7 @@ def calc_iou(R, img_data, C, class_mapping):
     y_class_num = []
     y_class_regr_coords = []
     y_class_regr_label = []
-    IoUs = []  # for debugging only
+    IoUs = []  # For debugging only
 
     for ix in range(R.shape[0]):
         (x1, y1, x2, y2) = R[ix, :]
@@ -160,9 +160,9 @@ def non_max_suppression_fast(boxes, overlap_thresh=0.9, max_boxes=300):
     # TODO: Caution!!! now the boxes actually is [x1, y1, x2, y2, prob] format!!!! with prob built in
     if len(boxes) == 0:
         return []
-    # normalize to np.array
+    # Normalize to np.array
     boxes = np.array(boxes)
-    # grab the coordinates of the bounding boxes
+    # Grab the coordinates of the bounding boxes
     x1 = boxes[:, 0]
     y1 = boxes[:, 1]
     x2 = boxes[:, 2]
@@ -176,7 +176,7 @@ def non_max_suppression_fast(boxes, overlap_thresh=0.9, max_boxes=300):
 
     pick = []
     area = (x2 - x1) * (y2 - y1)
-    # sorted by boxes last element which is prob
+    # Sorted by boxes last element which is prob
     indexes = np.argsort([i[-1] for i in boxes])
 
     while len(indexes) > 0:
@@ -184,7 +184,7 @@ def non_max_suppression_fast(boxes, overlap_thresh=0.9, max_boxes=300):
         i = indexes[last]
         pick.append(i)
 
-        # find the intersection
+        # Find the intersection
         xx1_int = np.maximum(x1[i], x1[indexes[:last]])
         yy1_int = np.maximum(y1[i], y1[indexes[:last]])
         xx2_int = np.minimum(x2[i], x2[indexes[:last]])
@@ -194,22 +194,24 @@ def non_max_suppression_fast(boxes, overlap_thresh=0.9, max_boxes=300):
         hh_int = np.maximum(0, yy2_int - yy1_int)
 
         area_int = ww_int * hh_int
-        # find the union
+        # Find the union
         area_union = area[i] + area[indexes[:last]] - area_int
 
-        # compute the ratio of overlap
+        # Compute the ratio of overlap
         overlap = area_int / (area_union + 1e-6)
 
-        # delete all indexes from the index list that have
+        # Delete all indexes from the index list that have
         indexes = np.delete(indexes, np.concatenate(([last], np.where(overlap > overlap_thresh)[0])))
 
         if len(pick) >= max_boxes:
             break
-    # return only the bounding boxes that were picked using the integer data type
+    # Return only the bounding boxes that were picked using the integer data type
     boxes = boxes[pick]
+
     return boxes
 
 
+# For TensorFlow 2.x, change dime_ordering to data_format
 # -def rpn_to_roi(rpn_layer, regr_layer, cfg, dim_ordering, use_regr=True, max_boxes=300, overlap_thresh=0.9):
 def rpn_to_roi(rpn_layer, regr_layer, cfg, data_format, use_regr=True, max_boxes=300, overlap_thresh=0.9):
     regr_layer = regr_layer / cfg.std_scaling
@@ -286,4 +288,5 @@ def rpn_to_roi(rpn_layer, regr_layer, cfg, data_format, use_regr=True, max_boxes
     result = non_max_suppression_fast(all_boxes, overlap_thresh=overlap_thresh, max_boxes=max_boxes)
     # omit the last column which is prob
     result = result[:, 0: -1]
+
     return result
