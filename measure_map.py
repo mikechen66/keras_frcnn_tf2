@@ -78,19 +78,19 @@ def get_map(pred, gt, f):
 sys.setrecursionlimit(40000)
 
 parser = OptionParser()
-
+# Add the new line to avoid the parser error. 
+parser.add_option("-f", "--file", default="hello you need me", help="hello you need me")
 parser.add_option("-p", "--path", dest="test_path", help="Path to test data.")
 parser.add_option("-n", "--num_rois", dest="num_rois",
                   help="Number of ROIs per iteration. Higher means more memory use.", default=32)
 parser.add_option("--config_filename", dest="config_filename", help=
-"Location to read the metadata related to the training (generated when training).",
+                  "Location to read the metadata related to the training (generated when training).",
                   default="config.pickle")
 parser.add_option("-o", "--parser", dest="parser", help="Parser to use. One of simple or pascal_voc",
                   default="pascal_voc"),
-
 (options, args) = parser.parse_args()
 
-if not options.test_path:  # if filename is not given
+if not options.test_path:  # if a filename is not given
     parser.error('Error: path to test data must be specified. Pass --path to command line')
 
 if options.parser == 'pascal_voc':
@@ -105,7 +105,7 @@ config_output_filename = options.config_filename
 with open(config_output_filename, 'r') as f_in:
     C = pickle.load(f_in)
 
-# turn off any data augmentation at test time
+# Turn off any data augmentation at test time
 C.use_horizontal_flips = False
 C.use_vertical_flips = False
 C.rot_90 = False
@@ -162,10 +162,10 @@ img_input = Input(shape=input_shape_img)
 roi_input = Input(shape=(C.num_rois, 4))
 feature_map_input = Input(shape=input_shape_features)
 
-# define the base network (resnet here, can be VGG, Inception, etc)
+# Define the base network (resnet here, can be VGG, Inception, etc)
 shared_layers = nn.nn_base(img_input, trainable=True)
 
-# define the RPN, built on the base layers
+# Define the RPN with building on the base layers
 num_anchors = len(C.anchor_box_scales) * len(C.anchor_box_ratios)
 rpn_layers = nn.rpn(shared_layers, num_anchors)
 
@@ -198,17 +198,18 @@ for idx, img_data in enumerate(test_imgs):
     if K.image_data_format() == 'channels_last': 
         X = np.transpose(X, (0, 2, 3, 1))
 
-    # get the feature maps and output from the RPN
+    # Get the feature maps and output from the RPN
     [Y1, Y2, F] = model_rpn.predict(X)
 
+    # Please notice that there are just 5 parameters (not 7 parameters)
     # -R = roi_helpers.rpn_to_roi(Y1, Y2, C, K.image_dim_ordering(), overlap_thresh=0.7)
     R = roi_helpers.rpn_to_roi(Y1, Y2, C, K.image_data_format(), overlap_thresh=0.7)
 
-    # convert from (x1,y1,x2,y2) to (x,y,w,h)
+    # Convert from (x1,y1,x2,y2) to (x,y,w,h)
     R[:, 2] -= R[:, 0]
     R[:, 3] -= R[:, 1]
 
-    # apply the spatial pyramid pooling to the proposed regions
+    # Apply the spatial pyramid pooling to the proposed regions
     bboxes = {}
     probs = {}
 
