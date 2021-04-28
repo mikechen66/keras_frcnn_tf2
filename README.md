@@ -171,7 +171,7 @@ Starting training:
 
 ## Issues 
 
-There is a floating incompatibility issue while execute the training. It might be an issue related to the scripts while upgrading both the TensorFlow 2.3 and Keras 2.3. 
+There is a floating incompatibility issue while execute the training. It might be an issue related to the new scripts based on both the TensorFlow 2.3 and Keras 2.4. 
 
 TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
 
