@@ -8,6 +8,8 @@ import sys
 import time
 import numpy as np
 import pickle
+import tensorflow as tf 
+
 from keras import backend as K
 from keras.optimizers import Adam, SGD, RMSprop
 from keras.layers import Input
@@ -21,8 +23,14 @@ from keras_frcnn import resnet as nn
 from keras_frcnn.simple_parser import get_data
 
 
+# Set up the GPU memory size to avoid the out-of-memory error
+gpus = tf.config.experimental.list_physical_devices('GPU')
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
+
+
 def train_kitti():
-    # config for data argument
+    # Set config for data argument
     cfg = config.Config()
     cfg.use_horizontal_flips = True
     cfg.use_vertical_flips = True
@@ -32,7 +40,7 @@ def train_kitti():
 
     # TODO: the only file should be changed for other data to train
     # -cfg.model_path = './model/kitti_frcnn_last.hdf5'
-    cfg.model_path = './model/kitti_frcnn_last.h5'
+    cfg.model_path = './model/kitti_frcnn_last.hdf5'
     cfg.simple_label_file = 'kitti_simple_label.txt'
 
     all_images, classes_count, class_mapping = get_data(cfg.simple_label_file)
@@ -60,12 +68,10 @@ def train_kitti():
     print('Num train samples {}'.format(len(train_imgs)))
     print('Num val samples {}'.format(len(val_imgs)))
 
-    # -data_gen_train = data_generators.get_anchor_gt(train_imgs, classes_count, cfg, nn.get_img_output_length,
-                                                   # -K.image_dim_ordering(), mode='train')
+    # Change K.image_dim_ordering() to K.image_data_format() due to TensorFlow 2.x
     data_gen_train = data_generators.get_anchor_gt(train_imgs, classes_count, cfg, nn.get_img_output_length,
                                                    K.image_data_format(), mode='train')
-    # -data_gen_val = data_generators.get_anchor_gt(val_imgs, classes_count, cfg, nn.get_img_output_length,
-                                                    # -K.image_dim_ordering(), mode='val')
+    # # Change K.image_dim_ordering() to K.image_data_format() due to TensorFlow 2.x
     data_gen_val = data_generators.get_anchor_gt(val_imgs, classes_count, cfg, nn.get_img_output_length,
                                                  K.image_data_format(), mode='val')
 
@@ -79,10 +85,10 @@ def train_kitti():
     img_input = Input(shape=input_shape_img)
     roi_input = Input(shape=(None, 4))
 
-    # define the base network (resnet here, can be VGG, Inception, etc)
+    # Define the base network (resnet50 here, can be VGG, Inception, etc)
     shared_layers = nn.nn_base(img_input, trainable=True)
 
-    # define the RPN, built on the base layers
+    # Define the RPN, built on the base layers
     num_anchors = len(cfg.anchor_box_scales) * len(cfg.anchor_box_ratios)
     rpn = nn.rpn(shared_layers, num_anchors)
 
@@ -91,13 +97,15 @@ def train_kitti():
     model_rpn = Model(img_input, rpn[:2])
     model_classifier = Model([img_input, roi_input], classifier)
 
-    # this is a model that holds both the RPN and the classifier, used to load/save weights for the models
+    # This is the model that holds both the RPN and the classifier used to load/save weights for the models
     model_all = Model([img_input, roi_input], rpn[:2] + classifier)
 
     try:
         print('loading weights from {}'.format(cfg.base_net_weights))
-        model_rpn.load_weights(cfg.model_path, by_name=True)
-        model_classifier.load_weights(cfg.model_path, by_name=True)
+        # -model_rpn.load_weights(cfg.model_path, by_name=True)
+        model_rpn.load_weights(cfg.base_net_weights, by_name=True)
+        # -model_classifier.load_weights(cfg.model_path, by_name=True)
+        model_classifier.load_weights(cfg.base_net_weights, by_name=True)
     except Exception as e:
         print(e)
         print('Could not load pretrained model weights. Weights can be found in the keras application folder '
@@ -114,7 +122,7 @@ def train_kitti():
                              metrics={'dense_class_{}'.format(len(classes_count)): 'accuracy'})
     model_all.compile(optimizer='sgd', loss='mae')
 
-    # Initially train the dataset with 10 epochs and change it to 100 or 1000 after normal running the 10 epochs. 
+    # Initially train the dataset with 10 epochs and change it to 100 or 1000 after a success runn. 
     # -epoch_length = 1000
     epoch_length = 10
     num_epochs = int(cfg.num_epochs)
@@ -151,7 +159,7 @@ def train_kitti():
                 X, Y, img_data = next(data_gen_train)
                 loss_rpn = model_rpn.train_on_batch(X, Y)
                 P_rpn = model_rpn.predict_on_batch(X)
-                # -result = roi_helpers.rpn_to_roi(P_rpn[0], P_rpn[1], cfg, K.image_dim_ordering(), 
+                # For TensorFlow 2.x, chnage K.image_dim_ordering() to K.image_data_format()
                 result = roi_helpers.rpn_to_roi(P_rpn[0], P_rpn[1], cfg, K.image_data_format(),
                                                 use_regr=True, overlap_thresh=0.7, max_boxes=300)
                 # note: calc_iou converts from (x1,y1,x2,y2) to (x,y,w,h) format
@@ -192,7 +200,7 @@ def train_kitti():
 
                     sel_samples = selected_pos_samples + selected_neg_samples
                 else:
-                    # in the extreme case where num_rois = 1, we pick a random pos or neg sample
+                    # For the extreme case: num_rois = 1, please ick a random pos or neg sample
                     selected_pos_samples = pos_samples.tolist()
                     selected_neg_samples = neg_samples.tolist()
                     if np.random.randint(0, 2):
