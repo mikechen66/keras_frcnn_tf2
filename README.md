@@ -123,27 +123,32 @@ You can also using `-p` to specific single image to predict, or send a path cont
 
 ## Results
 
-It show the following results during running the train script. While run the application, it saves time to set both epocks and lengh as 10. 
+It shows the following results during running the train script. While run the script, it saves time to set both epocks and lengh as 10. 
 After a success run, users can set them to a large number to optimize the tainning effect. 
 
-Training images per class:
-{'Car': 28742,
- 'Cyclist': 1627,
- 'DontCare': 11295,
- 'Misc': 973,
- 'Pedestrian': 4487,
- 'Person_sitting': 222,
- 'Tram': 511,
- 'Truck': 1094,
- 'Van': 2914,
- 'bg': 0}
-Num classes (including bg) = 10
-Num train samples 6276
-Num val samples 1205
+1st.Parsing annotation files
+
+    Config has been written to config.pickle, and can be loaded when testing to ensure correct results
+
+    Training images per class:
+    {'Car': 28742,
+     'Cyclist': 1627,
+     'DontCare': 11295,
+     'Misc': 973,
+     'Pedestrian': 4487,
+     'Person_sitting': 222,
+     'Tram': 511,
+     'Truck': 1094,
+     'Van': 2914,
+     'bg': 0}
+     
+    Num classes (including bg) = 10
+    Num train samples 6276
+    Num val samples 1205
 
 ........
 
-Starting training: 
+2nd. Starting training: 
 
     Epoch 1/10
     2021-04-28 14:08
