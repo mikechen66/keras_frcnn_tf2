@@ -49,16 +49,14 @@ class Config:
 
         # location of pretrained weights for the base network
         # weight files can be found at:
-        # https://github.com/fchollet/deep-learning-models/releases/download/v0.2/resnet50_weights_th_dim_ordering_th_kernels_notop.h5
+        # https://github.com/fchollet/deep-learning-models/releases/download/v0.2/resnet50_weights_th_dim_ordering_tf_kernels.h5
         # https://github.com/fchollet/deep-learning-models/releases/download/v0.2/resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5
 
-        # -self.model_path = 'model_trained/model_frcnn.vgg.hdf5'
         # -self.model_path = 'model_trained/model_frcnn.resnet50.hdf5'
         # -self.model_path = '/home/mic/Documents/dl-cookbook/keras_frcnn/model/resnet50_weights_tf_dim_ordering_tf_kernels.h5'
         self.model_path = './model/resnet50_weights_tf_dim_ordering_tf_kernels.h5'
-        # -self.model_path = '/home/mic/Documents/dl-cookbook/keras_frcnn/model/resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5'
 
-        # params add by me
+      
         self.data_dir = '.data/'
         # -self.num_epochs = 3000
         self.num_epochs = 10
