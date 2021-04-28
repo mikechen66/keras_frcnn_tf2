@@ -64,11 +64,12 @@ def identity_block(input_tensor, kernel_size, filters, stage, block, trainable=T
 
     x = Add()([x, input_tensor])
     x = Activation('relu')(x)
+
     return x
 
 
 def identity_block_td(input_tensor, kernel_size, filters, stage, block, trainable=True):
-    # identity block time distributed
+    # Identity block time distributed
     nb_filter1, nb_filter2, nb_filter3 = filters
     # -if K.image_dim_ordering() == 'tf':
     if K.image_data_format() == 'channels_last':
@@ -132,11 +133,12 @@ def conv_block(input_tensor, kernel_size, filters, stage, block, strides=(2, 2),
 
     x = Add()([x, shortcut])
     x = Activation('relu')(x)
+    
     return x
 
 
 def conv_block_td(input_tensor, kernel_size, filters, stage, block, input_shape, strides=(2,2), trainable=True):
-    # conv block time distributed
+    # Conv block time distributed
     nb_filter1, nb_filter2, nb_filter3 = filters
     # -if K.image_dim_ordering() == 'tf':
     if K.image_data_format() == 'channels_last':
@@ -170,6 +172,7 @@ def conv_block_td(input_tensor, kernel_size, filters, stage, block, input_shape,
 
     x = Add()([x, shortcut])
     x = Activation('relu')(x)
+
     return x
 
 
@@ -199,7 +202,6 @@ def nn_base(input_tensor=None, trainable=False):
     x = ZeroPadding2D((3, 3))(img_input)
 
     # print('++ zero padding: ', x)
-
     x = Convolution2D(64, (7, 7), strides=(2, 2), name='conv1', trainable=trainable)(x)
 
     # print('+ conv 2d: ', x)
@@ -228,14 +230,14 @@ def nn_base(input_tensor=None, trainable=False):
 
 
 def classifier_layers(x, input_shape, trainable=False):
-    # compile times on theano tend to be very high, so we use smaller ROI pooling regions to workaround
+    # Compile times on theano tend to be very high, so we use smaller ROI pooling regions to workaround
     # (hence a smaller stride in the region that follows the ROI pool)
-    if K.backend() == 'tensorflow':
-    # -if K.image_data_format == 'channels_last':
+    # -if K.backend() == 'tensorflow':
+    if K.image_data_format() == 'channels_last':
         x = conv_block_td(x, 3, [512, 512, 2048], stage=5, block='a', input_shape=input_shape, strides=(2, 2),
                           trainable=trainable)
-    elif K.backend() == 'theano':
-    # -elif K.image_data_format == 'channels_first':
+    # -elif K.backend() == 'theano':
+    elif K.image_data_format() == 'channels_first':
         x = conv_block_td(x, 3, [512, 512, 2048], stage=5, block='a', input_shape=input_shape, strides=(1, 1),
                           trainable=trainable)
 
@@ -258,13 +260,13 @@ def rpn(base_layers, num_anchors):
 
 
 def classifier(base_layers, input_rois, num_rois, nb_classes=21, trainable=False):
-    # compile times on theano tend to be very high, so we use smaller ROI pooling regions to workaround
-    if K.backend() == 'tensorflow':
-    # -if K.image_data_format == 'channels_last':
+    # Compile times on theano tend to be very high, so we use smaller ROI pooling regions to workaround
+    # -if K.backend() == 'tensorflow':
+    if K.image_data_format() == 'channels_last':
         pooling_regions = 14
         input_shape = (num_rois, 14, 14, 1024)
-    elif K.backend() == 'theano':
-    # -elif K.image_data_format == 'channels_first':
+    # -elif K.backend() == 'theano':
+    elif K.image_data_format() == 'channels_first':
         pooling_regions = 7
         input_shape = (num_rois, 1024, 7, 7)
 
@@ -275,7 +277,8 @@ def classifier(base_layers, input_rois, num_rois, nb_classes=21, trainable=False
 
     out_class = TimeDistributed(Dense(nb_classes, activation='softmax', kernel_initializer='zero'),
                                 name='dense_class_{}'.format(nb_classes))(out)
-    # note: no regression target for bg class
+    # Please note no regression target for bg class
     out_regr = TimeDistributed(Dense(4 * (nb_classes - 1), activation='linear', kernel_initializer='zero'),
                                name='dense_regress_{}'.format(nb_classes))(out)
+
     return [out_class, out_regr]
