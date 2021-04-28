@@ -8,11 +8,11 @@ Usage:
 For Python 3 in the conda environment, please execute the command with 
 changing the new paths. 
 python generate_simple_kitti_anno_file.py \
-/home/mic/Documents/dl-cookbook/keras_frcnn/training/image_2 \
-/home/mic/Documents/dl-cookbook/keras_frcnn/training/label_2
+/home/mic/Documents/keras_frcnn/data/training/image_2 \
+/home/mic/Documents/keras_frcnn/data/training/label_2
 
-kitti_simple_label.txt is generated as follows. 
-/home/mic/Documents/dl-cookbook/keras_frcnn/kitti_simple_label.txt
+Generate kitti_simple_label.txt as follows. 
+/home/mic/Documents/keras_frcnn/kitti_simple_label.txt
 """
 
 
@@ -24,7 +24,7 @@ import sys
 
 def generate(img_dir_, label_dir_):
     """
-    convert kitti data into a single txt file, with this format:
+    Convert kitti data into a single txt file, with this format:
     Pedestrian 0.00 0 -0.20 712.40 143.00 810.73 307.92 1.89 0.48 1.20 1.84 1.47 8.41 0.01
 
     type, truncated, occluded, alpha,
