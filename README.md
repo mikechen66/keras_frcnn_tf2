@@ -27,12 +27,14 @@ to train a new dataset is also very simple and straight forward. Simply convert 
 kitti dataset downloads:
 
 kitti website
+
 http://www.cvlibs.net/datasets/kitti/eval_object.php
 
 data_object_label_2
 $ wget https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_label_2.zip
 
 data_object_image_2
+
 $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zip
 
 
