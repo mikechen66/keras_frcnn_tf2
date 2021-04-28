@@ -113,7 +113,7 @@ $ cd ./Documents/keras_frcnn
 1st. Test the default image
 $ python test_frcnn_kitti.py
 
-2nd. Testa a specific image 
+2nd. Test a specific image 
 python test_frcnn_kitti.py -p ./images/00009.png
 
 3rd. Test all images in a designated fileholder 
