@@ -37,8 +37,16 @@ $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zi
 
 ## Train the model based on ResNet50
 
-1st. Create the fileholders including data and model respectively.  
+1st. Create the fileholders including data, model, image, result_images respectively.  
 
+     $ mkdir /home/user/Documents/keras_frcnn/data
+     ./Documents/keras_frcnn/data
+     
+     Take the same way to create other folders. 
+     ./Documents/keras_frcnn/images 
+     ./Documents/keras_frcnn/result_images
+     ./Documents/keras_frcnn/model 
+     
 2nd. Generate the file of kitti_simple_label.txt
 
      Enter into the fileholder of keras_frcnn
