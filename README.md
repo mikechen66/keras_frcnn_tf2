@@ -4,9 +4,6 @@
 
 This work has been publiced on **StrangeAI - An AI Algorithm Hub**,  You can found this work at [Here](http://ai.loliloli.pro/) (You may found more interesting work on this website, it's a very good resource to learn AI, StrangeAi authors maintainered all applications in AI).
 
-
-> this is a very userful implementation of faster-rcnn based on tensorflow and keras, the model is very clear and just saved in .h5 file, out of box to use, and easy to train on other data set with full support. if you have any question, feel free to ask me via wechat: jintianiloveu
-
 ## Update
 
 This code only support to both TensorFlow 2.3 keras 2.4. If you can fix it, feel free to send me a PR.
