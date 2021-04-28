@@ -16,7 +16,7 @@ from keras_frcnn.visualize import draw_boxes_and_label_on_image_cv2
 
 
 def format_img_size(img, cfg):
-    """ formats the image size based on config """
+    """Formats the image size based on config"""
     img_min_side = float(cfg.im_size)
     (height, width, _) = img.shape
 
@@ -33,7 +33,7 @@ def format_img_size(img, cfg):
 
 
 def format_img_channels(img, cfg):
-    """ formats the image channels based on config """
+    """Format the image channels based on config"""
     img = img[:, :, (2, 1, 0)]
     img = img.astype(np.float32)
     img[:, :, 0] -= cfg.img_channel_mean[0]
@@ -46,19 +46,18 @@ def format_img_channels(img, cfg):
 
 
 def format_img(img, C):
-    """ formats an image for model prediction based on config """
+    """Format an image for model prediction based on config"""
     img, ratio = format_img_size(img, C)
     img = format_img_channels(img, C)
     return img, ratio
 
 
-# Method to transform the coordinates of the bounding box to its original size
+# Define the method to transform the coordinates of the bounding box to its original size
 def get_real_coordinates(ratio, x1, y1, x2, y2):
     real_x1 = int(round(x1 // ratio))
     real_y1 = int(round(y1 // ratio))
     real_x2 = int(round(x2 // ratio))
     real_y2 = int(round(y2 // ratio))
-
     return real_x1, real_y1, real_x2, real_y2
 
 
@@ -70,20 +69,22 @@ def predict_single_image(img_path, model_rpn, model_classifier_only, cfg, class_
         exit(0)
 
     X, ratio = format_img(img, cfg)
-    if K.image_dim_ordering() == 'tf':
+    # -if K.image_dim_ordering() == 'tf':
+    if K.image_data_format() == 'channels last': 
         X = np.transpose(X, (0, 2, 3, 1))
-    # get the feature maps and output from the RPN
+    # Get the feature maps and output from the RPN
     [Y1, Y2, F] = model_rpn.predict(X)
 
-    # this is result contains all boxes, which is [x1, y1, x2, y2]
-    result = roi_helpers.rpn_to_roi(Y1, Y2, cfg, K.image_dim_ordering(), overlap_thresh=0.7)
+    # This is result contains all boxes, which is [x1, y1, x2, y2]
+    # -result = roi_helpers.rpn_to_roi(Y1, Y2, cfg, K.image_dim_ordering(), overlap_thresh=0.7)
+    result = roi_helpers.rpn_to_roi(Y1, Y2, cfg, K.image_data_format(), overlap_thresh=0.7)
 
-    # convert from (x1,y1,x2,y2) to (x,y,w,h)
+    # Convert from (x1,y1,x2,y2) to (x,y,w,h)
     result[:, 2] -= result[:, 0]
     result[:, 3] -= result[:, 1]
     bbox_threshold = 0.8
 
-    # apply the spatial pyramid pooling to the proposed regions
+    # Apply the spatial pyramid pooling to the proposed regions
     boxes = dict()
     for jk in range(result.shape[0] // cfg.num_rois + 1):
         rois = np.expand_dims(result[cfg.num_rois * jk:cfg.num_rois * (jk + 1), :], axis=0)
@@ -121,7 +122,7 @@ def predict_single_image(img_path, model_rpn, model_classifier_only, cfg, class_
             boxes[cls_num].append(
                 [cfg.rpn_stride * x, cfg.rpn_stride * y, cfg.rpn_stride * (x + w), cfg.rpn_stride * (y + h),
                  np.max(p_cls[0, ii, :])])
-    # add some nms to reduce many boxes
+    # Add some nms to reduce many boxes
     for cls_num, box in boxes.items():
         boxes_nms = roi_helpers.non_max_suppression_fast(box, overlap_thresh=0.5)
         boxes[cls_num] = boxes_nms
@@ -163,8 +164,8 @@ def predict(args_):
     # define the RPN, built on the base layers
     num_anchors = len(cfg.anchor_box_scales) * len(cfg.anchor_box_ratios)
     rpn_layers = nn.rpn(shared_layers, num_anchors)
-    classifier = nn.classifier(feature_map_input, roi_input, cfg.num_rois, nb_classes=len(class_mapping),
-                               trainable=True)
+    classifier = nn.classifier(feature_map_input, roi_input, cfg.num_rois, 
+                               nb_classes=len(class_mapping), trainable=True)
     model_rpn = Model(img_input, rpn_layers)
     model_classifier_only = Model([feature_map_input, roi_input], classifier)
 
