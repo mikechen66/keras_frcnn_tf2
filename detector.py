@@ -17,7 +17,6 @@ from keras_frcnn.visualize import draw_boxes_and_label_on_image_cv2
 from utils.process import *
 
 
-
 class FasterRCNNDetector(object):
 
     def __init__(self, model_path):
@@ -50,7 +49,7 @@ class FasterRCNNDetector(object):
 
         shared_layers = nn.nn_base(img_input, trainable=False)
 
-        # define the RPN, built on the base layers
+        # Define the RPN, built on the base layers
         num_anchors = len(self.cfg.anchor_box_scales) * len(self.cfg.anchor_box_ratios)
         rpn_layers = nn.rpn(shared_layers, num_anchors)
         classifier = nn.classifier(feature_map_input, roi_input, self.cfg.num_rois, 
@@ -91,7 +90,7 @@ class FasterRCNNDetector(object):
         result[:, 3] -= result[:, 1]
         bbox_threshold = 0.8
 
-        # apply the spatial pyramid pooling to the proposed regions
+        # Apply the spatial pyramid pooling to the proposed regions
         boxes = dict()
         for jk in range(result.shape[0] // self.cfg.num_rois + 1):
             rois = np.expand_dims(result[self.cfg.num_rois * jk:self.cfg.num_rois * (jk + 1), :], axis=0)
@@ -129,7 +128,7 @@ class FasterRCNNDetector(object):
                 boxes[cls_num].append(
                     [self.cfg.rpn_stride * x, self.cfg.rpn_stride * y, self.cfg.rpn_stride * (x + w), self.cfg.rpn_stride * (y + h),
                      np.max(p_cls[0, ii, :])])
-        # add some nms to reduce many boxes
+        # Add some nms to reduce many boxes
         for cls_num, box in boxes.items():
             boxes_nms = roi_helpers.non_max_suppression_fast(box, overlap_thresh=0.5)
             boxes[cls_num] = boxes_nms
@@ -141,7 +140,8 @@ class FasterRCNNDetector(object):
         print('Elapsed time = {}'.format(time.time() - tic))
         cv2.imshow('image', img)
 
-        result_path = './results_images/{}.png'.format('result')
+        # Change results_images to resust_images
+        result_path = './result_images/{}.png'.format('result')
         print('result saved into ', result_path)
         cv2.imwrite(result_path, img)
         cv2.waitKey(0)
