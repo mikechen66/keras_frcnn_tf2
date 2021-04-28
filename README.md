@@ -77,7 +77,7 @@ $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zi
      else:
         return 'resnet50_weights_tf_dim_ordering_tf_kernels.h5'
      
-4rd. Train the model
+4th. Train the model
 
      Enter into the fileholder of keras_frcnn
      $ cd ./Documents/keras_frcnn
