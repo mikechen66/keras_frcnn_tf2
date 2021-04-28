@@ -26,8 +26,6 @@ Basically, this code supports both python2.7 and python3.7, the following packag
 
 I have trained a model to predict kitti. I will update a dropbox link here later. Let's see the result of predict:
 
-<img src="http://opbocoyb4.bkt.clouddn.com/000010.png" align="center">
-
 ## Train New Dataset
 
 to train a new dataset is also very simple and straight forward. Simply convert your detection label file whatever format into this format:
