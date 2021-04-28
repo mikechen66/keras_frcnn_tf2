@@ -1,8 +1,10 @@
 from keras.engine.topology import Layer
 import keras.backend as K
 
-if K.backend() == 'tensorflow':
+# -if K.backend() == 'tensorflow':
+if K.image_data_format() == 'channels_last':
     import tensorflow as tf
+
 
 class RoiPoolingConv(Layer):
     '''ROI pooling layer for 2D inputs.
@@ -67,8 +69,8 @@ class RoiPoolingConv(Layer):
 
             num_pool_regions = self.pool_size
 
-            #NOTE: the RoiPooling implementation differs between theano and tensorflow due to the lack of a resize op
-            # in theano. The theano implementation is much less efficient and leads to long compile times
+            # NOTE: the RoiPooling implementation differs between theano and tensorflow due to the lack of a resize 
+            # op in theano. The theano implementation is much less efficient and leads to long compile times
 
             # -if self.dim_ordering == 'th':
             if self.data_format == 'channels_first':
