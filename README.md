@@ -6,9 +6,10 @@ This work has been publiced on **StrangeAI - An AI Algorithm Hub**,  You can fou
 
 ## Update
 
-This code only support to both TensorFlow 2.3 keras 2.4. If you can fix it, feel free to send me a PR.
+This code is upgraded to support to both TensorFlow 2.3 keras 2.4. If you have any issues, please keep in touch. 
 
 ## Requirements
+
 Basically, this code supports both python2.7 and python3.7, the following package should be installed:
 
 * TensorFlow 2.3
@@ -18,15 +19,12 @@ Basically, this code supports both python2.7 and python3.7, the following packag
 
 ## Out of box model to predict
 
-I have trained a model to predict kitti. I will update a dropbox link here later. Let's see the result of predict:
+The original author has trained a model to predict kitti. I will update a dropbox link here later. Let's see the result of predict:
 
-## Train New Dataset
 
-to train a new dataset is also very simple and straight forward. Simply convert your detection label file whatever format into this format:
+## kitti dataset downloads:
 
-kitti dataset downloads:
-
-kitti website
+kitti website: 
 
 http://www.cvlibs.net/datasets/kitti/eval_object.php
 
@@ -38,6 +36,9 @@ data_object_image_2
 
 $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zip
 
+## Train New Dataset
+
+To train a new dataset is also very simple and straight forward. Simply convert your detection label file whatever format into this format:
 
 ```
 /path/training/image_2/000000.png,712.40,143.00,810.73,307.92,Pedestrian
@@ -45,12 +46,12 @@ $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zi
 ```
 Which is `/path/to/img.png,x1,y1,x2,y2,class_name`, with this simple file, we don't need class map file, our training program will statistic this automatically.
 
-## For Predict
+## For Test 
 
-If you want see how good your trained model is, simply run:
+If you want see how good your trained model is, please simply run the script as follows. 
 ```
 python test_frcnn_kitti.py
 ```
-you can also using `-p` to specific single image to predict, or send a path contains many images, our program will automatically recognise that.
+You can also using `-p` to specific single image to predict, or send a path contains many images, our program will automatically recognise that.
 
 **That's all, help you enjoy!**
