@@ -21,8 +21,7 @@ Basically, this code supports both python2.7 and python3.7, the following packag
 
 The original author has trained a model to predict kitti. I will update a dropbox link here later. 
 
-
-## kitti dataset downloads:
+## Kitti Dataset:
 
 kitti website: 
 
@@ -35,6 +34,57 @@ $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_label_2.zi
 data_object_image_2
 
 $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zip
+
+## Train the model based on ResNet50
+
+1st. Create the fileholders including data and model respectively.  
+
+2nd. Generate the file of kitti_simple_label.txt
+
+     Enter into the fileholder of keras_frcnn
+     $ cd ./Documents/keras_frcnn
+     
+     Run the kitti script 
+     $ python generate_simple_kitti_anno_file.py \
+     /home/user/Documents/keras_frcnn/data/training/image_2 \
+     /home/user/Documents/keras_frcnn/data/training/label_2
+
+3nd. set up both resnet50 and kitti_frcnn weight
+
+     A.Set ResNet50 in config.py under the second directory of keras_frcnn. 
+     
+     self.network = 'resnet50'
+     self.model_path = './model/resnet50_weights_tf_dim_ordering_tf_kernels.h5'
+     
+     B.Change the original vgg to kitti_frcnn.last.hdf5 in config.py
+     
+     self.model_path = '.model/kitti_frcnn.last.hdf5'
+     
+     C.Set base_net_weights name in train_frcnn_kitti.py. 
+     
+     try:
+     print('loading weights from {}'.format(cfg.base_net_weights))
+     # -model_rpn.load_weights(cfg.model_path, by_name=True)
+     model_rpn.load_weights(cfg.base_net_weights, by_name=True)
+     # -model_classifier.load_weights(cfg.model_path, by_name=True)
+     model_classifier.load_weights(cfg.base_net_weights, by_name=True)
+     
+     D. Set restnet50 weight
+     
+     def get_weight_path():
+     if K.image_data_format() == 'channels_first':
+        return 'resnet50_weights_th_dim_ordering_th_kernels_notop.h5'
+     else:
+        return 'resnet50_weights_tf_dim_ordering_tf_kernels.h5'
+     
+4rd. Train the model
+
+     Enter into the fileholder of keras_frcnn
+     $ cd ./Documents/keras_frcnn
+     
+     Run the train script 
+     $ python train_frcnn_kitti.py
+     
 
 ## Train New Dataset
 
@@ -50,7 +100,16 @@ Which is `/path/to/img.png,x1,y1,x2,y2,class_name`, with this simple file, we do
 
 If you want see how good your trained model is, please simply run the script as follows. 
 ```
-python test_frcnn_kitti.py
+$ cd ./Documents/keras_frcnn
+
+1st. Test the default image
+$ python test_frcnn_kitti.py
+
+2nd. Testa a specific iamge 
+python test_frcnn_kitti.py -p ./images/00009.png
+
+3rd. Test all images in a specific fileholder 
+python test_frcnn_kitti.py -p ./images
 ```
 You can also using `-p` to specific single image to predict, or send a path contains many images, our program will automatically recognise that.
 
