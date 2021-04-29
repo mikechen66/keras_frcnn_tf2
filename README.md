@@ -32,7 +32,7 @@ data_object_image_2
 
 $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zip
 
-## Train the model based on ResNet50
+## Train the model based on the pretrained ResNet50
 
 1st. Create the fileholders including data, model, image, result_images respectively.  
 
@@ -48,6 +48,8 @@ $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zi
      
 2nd. Generate the file of kitti_simple_label.txt
 
+     Please change user to your linux name 
+
      Enter into the fileholder of keras_frcnn
      $ cd ./Documents/keras_frcnn
      
@@ -56,7 +58,7 @@ $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zi
      /home/user/Documents/keras_frcnn/data/training/image_2 \
      /home/user/Documents/keras_frcnn/data/training/label_2
 
-3nd. set up both resnet50 and kitti_frcnn weight
+3nd. Set up both resnet50 and kitti_frcnn weights
 
      A.Set ResNet50 in config.py under the second directory of keras_frcnn. 
      
@@ -76,7 +78,7 @@ $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zi
      # -model_classifier.load_weights(cfg.model_path, by_name=True)
      model_classifier.load_weights(cfg.base_net_weights, by_name=True)
      
-     D. Set restnet50 weight
+     D.Set the restnet50 weight
      
      def get_weight_path():
      if K.image_data_format() == 'channels_first':
@@ -84,7 +86,7 @@ $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zi
      else:
         return 'resnet50_weights_tf_dim_ordering_tf_kernels.h5'
      
-4th. Train the model
+4th. Train the new model
 
      Enter into the fileholder of keras_frcnn
      $ cd ./Documents/keras_frcnn
@@ -103,7 +105,7 @@ To train a new dataset is also very simple and straight forward. Simply convert 
 ```
 Which is `/path/to/img.png,x1,y1,x2,y2,class_name`, with this simple file, we don't need class map file, our training program will statistic this automatically.
 
-## For Test 
+## Test the model 
 
 If you want see how good your trained model is, please simply run the script as follows. 
 ```
@@ -120,7 +122,7 @@ python test_frcnn_kitti.py -p ./images
 ```
 You can also using `-p` to specific single image to predict, or send a path contains many images, the application will automatically recognise the images.
 
-## Results
+## Operation Results
 
 It shows the following results during running the train script. While run the script, it saves time to set both epocks and lengh as 10. 
 After a success run, users can set them to a large number to optimize the tainning effect. 
