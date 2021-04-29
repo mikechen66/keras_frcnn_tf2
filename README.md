@@ -2,7 +2,7 @@
 
 ## Update
 
-This code is upgraded to support both TensorFlow 2.3 keras 2.4. If you have any issues, please keep in touch. 
+The applications is upgraded to support both TensorFlow 2.3 keras 2.4. If you have any issues, please keep in touch. 
 
 ## Requirements
 
@@ -15,7 +15,7 @@ Basically, this code supports both python2.7 and python3.7, the following packag
 
 ## Out of box model to predict
 
-The original author has trained a model to predict kitti. I will update a dropbox link here later. 
+The original author has trained a model to predict kitti.  
 
 ## Kitti Dataset:
 
