@@ -185,7 +185,8 @@ After a success run, users can set them to a large number to optimize the tainni
 
 2nd. Floating incompatibility issue
 
-    There is a floating incompatibility issue while execute the training. It might be an issue related to the new scripts based on both the TensorFlow     2.3 and Keras 2.4. 
+    There is a floating incompatibility issue during the training. It might be an issue related to the new scripts related to TensorFlow 2.3 and Keras 
+    2.4. But it is not sure. 
 
     TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
 
