@@ -174,7 +174,7 @@ After a success run, users can set them to a large number to optimize the tainni
 
 ## Issues 
 
-1nd. WARNING:tensorflow:
+1st. WARNING:tensorflow:
 
     5 out of the last 6 calls to <function Model.make_train_function.<locals>.train_function at 0x7f8db04f8170> triggered tf.function retracing.  
     Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with
