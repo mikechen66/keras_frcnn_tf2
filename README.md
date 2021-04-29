@@ -35,6 +35,8 @@ $ wget -c https://s3.eu-central-1.amazonaws.com/avg-kitti/data_object_image_2.zi
 
 1st. Create the fileholders including data, model, image, result_images respectively.  
 
+     Please change user to your linux name 
+
      $ mkdir /home/user/Documents/keras_frcnn/data
      ./Documents/keras_frcnn/data
      
