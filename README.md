@@ -1,12 +1,8 @@
 # Keras Faster-RCNN
 
-**[UPDATE]**
-
-This work has been publiced on **StrangeAI - An AI Algorithm Hub**,  You can found this work at [Here](http://ai.loliloli.pro/) (You may found more interesting work on this website, it's a very good resource to learn AI, StrangeAi authors maintainered all applications in AI).
-
 ## Update
 
-This code is upgraded to support to both TensorFlow 2.3 keras 2.4. If you have any issues, please keep in touch. 
+This code is upgraded to support both TensorFlow 2.3 keras 2.4. If you have any issues, please keep in touch. 
 
 ## Requirements
 
