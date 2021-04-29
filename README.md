@@ -153,7 +153,7 @@ After a success run, users can set them to a large number to optimize the tainni
     Epoch 1/10
     2021-04-28 14:08
     1/10 [==>...........................] - ETA: 3:34 - rpn_cls: 5.1244 - rpn_regr: 0.9318  
-    2/10 [=====>........................] - ETA: 2:34 - rpn_cls: 5.0801 - rpn_regr: 0.9644
+    2/10 [=====>........................] - ETA: 2:34 - rpn_cls: 5.0801 - rpn_regr: 0.9644 - detector_cls: 2.3001 - detector_regr: 0.3942
     3/10 [========>.....................] - ETA: 2:10 - rpn_cls: 5.0417 - rpn_regr: 0.9217
     ........
 
@@ -161,7 +161,7 @@ After a success run, users can set them to a large number to optimize the tainni
     Average number of overlapping bounding boxes from RPN = 2.0 for 10 previous iterations
     1/10 [==>...........................] - ETA: 33s - rpn_cls: 7.6447 - rpn_regr: 0.2620  
     2/10 [=====>........................] - ETA: 27s - rpn_cls: 6.3826 - rpn_regr: 0.3558 
-    3/10 [========>.....................] - ETA: 21s - rpn_cls: 6.4132 - rpn_regr: 0.3519
+    3/10 [========>.....................] - ETA: 21s - rpn_cls: 6.4132 - rpn_regr: 0.3519 - detector_cls: 0.2926 - detector_regr: 0.4456
     ........
 
     Average number of overlapping bounding boxes from RPN = 1.6 for 10 previous iterations
@@ -176,8 +176,19 @@ After a success run, users can set them to a large number to optimize the tainni
 
 ## Issues 
 
-There is a floating incompatibility issue while execute the training. It might be an issue related to the new scripts based on both the TensorFlow 2.3 and Keras 2.4. 
+1nd. WARNING:tensorflow:
 
-TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
+    5 out of the last 6 calls to <function Model.make_train_function.<locals>.train_function at 0x7f8db04f8170> triggered tf.function retracing.  
+    Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with
+    different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), 
+    @tf.function has experimental_relax_shapes=True option that relaxes argument shapes that can avoid unnecessary retracing. For (3), please refer to
+    https://www.tensorflow.org/tutorials/customization/performance#python_or_tensor_args and https://www.tensorflow.org/api_docs/python/tf/function for
+    more details.
+
+2nd. Floating incompatibility issue
+
+    There is a floating incompatibility issue while execute the training. It might be an issue related to the new scripts based on both the TensorFlow     2.3 and Keras 2.4. 
+
+    TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
 
 **That's all, help you enjoy!**
