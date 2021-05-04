@@ -222,19 +222,19 @@ def rpn_to_roi(rpn_layer, regr_layer, cfg, data_format, use_regr=True, max_boxes
 
     # -if dim_ordering == 'th':
     if K.image_data_format() == 'channels_first': 
-        # -(rows, cols) = rpn_layer.shape[2:]
-        rows, cols = rpn_layer.shape[2:]
+        # -rows, cols = rpn_layer.shape[2:]
+        (rows, cols) = rpn_layer.shape[2:]
     # -elif dim_ordering == 'tf':
-    if K.image_data_format() == 'channels_last':
-        # -(rows, cols) = rpn_layer.shape[1:3]
-        rows, cols = rpn_layer.shape[1:3]
+    else K.image_data_format() == 'channels_last':
+        # -rows, cols = rpn_layer.shape[1:3]
+        (rows, cols) = rpn_layer.shape[1:3]
 
     curr_layer = 0
     # -if dim_ordering == 'tf':
     if K.image_data_format() == 'channels_last':
         A = np.zeros((4, rpn_layer.shape[1], rpn_layer.shape[2], rpn_layer.shape[3]))
     # -elif dim_ordering == 'th':
-    elif K.image_data_format() == 'channels_first': 
+    else K.image_data_format() == 'channels_first': 
         A = np.zeros((4, rpn_layer.shape[2], rpn_layer.shape[3], rpn_layer.shape[1]))
 
     for anchor_size in anchor_sizes:
