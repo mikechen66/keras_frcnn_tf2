@@ -40,7 +40,7 @@ def calc_iou(R, img_data, C, class_mapping):
     gta = np.zeros((len(bboxes), 4)) 
 
     # for循环获得真实标注在特征图上的GT box坐标进行缩放，把最短边规整到指定的长度后，相应的边框长度也需要发生变化；请注
-    # 意gta的存储形式是(x1,x2,y1,y2)而不是(x1,y1,x2,y2)
+    # 类标签onehot类型意gta的存储形式是(x1,x2,y1,y2)而不是(x1,y1,x2,y2)
     for bbox_num, bbox in enumerate(bboxes): 
         # gta[bbox_num, 0] = (40*(600/800))/16 = int(round(1.875)) = 2 (x in feature map)
         gta[bbox_num, 0] = int(round(bbox['x1'] * (resized_width / float(width)) / C.rpn_stride))
@@ -48,16 +48,21 @@ def calc_iou(R, img_data, C, class_mapping):
         gta[bbox_num, 2] = int(round(bbox['y1'] * (resized_height / float(height)) / C.rpn_stride))
         gta[bbox_num, 3] = int(round(bbox['y2'] * (resized_height / float(height)) / C.rpn_stride))
 
-    # 对以下５个赋空值列表
+    # 候选框坐标列表
     x_roi = []
+    # 类标签onehot类型
     y_class_num = []
+    # 存放候选框坐标列表，每一个候选框生成一个类似于onehot的坐标列表，列表长度是(类数-1)*4
     y_class_regr_coords = []
+    # 存放候选框坐标有效标签列表，每个候选框生成一个类似于onehot的有效标签列表(类似于处理RPN时的有效位)，检测回归梯度的
+    # 有效位；列表长度为(类数-1)*4
     y_class_regr_label = []
+    # IoUs列表赋一个空值，用于记录best_iou
     IoUs = [] 
 
     # 遍历所有预选框R(roi)而无需做调整，因为RPN网络预测的框是基于最短框被调整后的，shape[0]表示宽(rows)
     for ix in range(R.shape[0]):
-        # 请注意R=[boxes,probs]，ix包括x-axis上所有点, gta的保存格式为
+        # 请注意R=[boxes,probs]，ix包括x-axis上所有点，x轴方向ix=[0,1,2,...,36]
         (x1, y1, x2, y2) = R[ix, :]　
         # int()方法求整，round()方法返回浮点数x1,y1,x2,y2的四舍五入值
         x1 = int(round(x1))
@@ -67,7 +72,7 @@ def calc_iou(R, img_data, C, class_mapping):
 
         # 存储当前roi(候选框)与所有真实标注框之间的最优iou值
         best_iou = 0.0
-        # 当前roi(候选框)对应的最优候选框index,请注意索引值为-1表示放在最后
+        # 当前roi(候选框)对应的最优候选框index,请注意-1的意思？
         best_bbox = -1
 
         # 把每一个预选框与所有的bboxes求交并比，记录最大交并比，用于确定该预选框的类别
@@ -79,7 +84,7 @@ def calc_iou(R, img_data, C, class_mapping):
                 best_iou = curr_iou
                 best_bbox = bbox_num
 
-        # 如果对于某个框匹配当前bbox的重叠率小于0.3，那么这个框就被扔掉；self.classifier_min_overlap = 0.1
+        # 如果对于某个框与当前bbox的重叠率小于0.3，那么这个框就被扔掉；self.classifier_min_overlap = 0.1
         if best_iou < C.classifier_min_overlap:
             continue
         # 当大于最小阈值时，则保留相关的边框信息
@@ -96,13 +101,14 @@ def calc_iou(R, img_data, C, class_mapping):
                 # 硬负例: 在对负样本分类时label与prediction之差loss较大的样本，即容易把负样本看成正样本的那些样本，
                 # 例如roi中没有物体而全是背景
                 cls_name = 'bg'
-            # 当大于最大阈值时获得物体，则计算其边框回归梯度，cxg is cx gta? self.classifier_max_overlap = 0.5
+            # 当大于最大阈值时获得物体则计算其边框回归梯度，第2次回归，self.classifier_max_overlap = 0.5
             elif C.classifier_max_overlap <= best_iou:
                 cls_name = bboxes[best_bbox]['class']
                 cxg = (gta[best_bbox, 0] + gta[best_bbox, 1]) / 2.0 
                 cyg = (gta[best_bbox, 2] + gta[best_bbox, 3]) / 2.0
                 cx = x1 + w / 2.0
                 cy = y1 + h / 2.0
+                # 这里的tx,ty,tw,th与data_generators.py中的calc_rpn()函数中的4个梯度值计算保持一致
                 tx = (cxg - cx) / float(w)
                 ty = (cyg - cy) / float(h)
                 tw = np.log((gta[best_bbox, 1] - gta[best_bbox, 0]) / float(w))
@@ -111,15 +117,16 @@ def calc_iou(R, img_data, C, class_mapping):
                 print('roi = {}'.format(best_iou))
                 raise RuntimeError
 
-        # 获得该类对应的数字和标签0,1,2...
+        # 获得该类对应的数字标签0,1,2...
         class_num = class_mapping[cls_name]
         # 用0类填空标签
         class_label = len(class_mapping) * [0]
-        # 把该数字对应的地方置为1即one-hot
+        # 把该数字对应的地方置为1即one-hot: 若有背景，则最后一位是1，表示为[0,0,0,...,1]
         class_label[class_num] = 1
-        # 把该类别加入到y_class_num，
+        # 把onehot编码的分类标签添加到进y_class_num，利用深拷贝改编存储位置
         y_class_num.append(copy.deepcopy(class_label))
-        # coords是用于存储边框回归梯度
+        # coords是用于存储边框回归梯度，初始化onehot的标签和坐标回归系数，把背景除外(背景全是0)，其它表示成4x(类数-1)
+        # 维的onehot，其中4个维度是1，标签是正数，坐标回归系数允许为小数
         coords = [0] * 4 * (len(class_mapping) - 1)
         # labels决定是否要加入计算loss中
         labels = [0] * 4 * (len(class_mapping) - 1)
@@ -221,8 +228,7 @@ def apply_regr_np(X, T):
         w1 = np.round(w1)
         h1 = np.round(h1)
 
-        # 关于np.stack([x1, y1, w1, h1])，见官方文档: numpy.stack(), 默认沿axis=0方向堆叠，因此输出的维度还是
-        # (4,38,50).
+        # 关于np.stack([x1, y1, w1, h1])，默认沿axis=0方向堆叠，因此输出的维度还是(4,38,50)
         return np.stack([x1, y1, w1, h1])
 
     except Exception as e:
