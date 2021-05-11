@@ -190,7 +190,7 @@ After a success run, users can set them to a large number to optimize the tainni
 2nd. Floating incompatibility issue
 
     There is a floating incompatibility issue during the training. It might be an issue related to the new scripts related to TensorFlow 2.3 and Keras 
-    2.4. It is not useful to set dtype='float32' in either numpy or keras code. But it is not sure. 
+    2.4. It is not useful to set dtype='float32' in either numpy or keras code in all avaiable scripts. So it is hard to make an improvement right now. 
 
     TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
 
