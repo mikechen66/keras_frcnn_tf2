@@ -206,7 +206,7 @@ def calc_rpn(C, img_data, width, height, resized_width, resized_height, img_leng
                         y_is_box_valid[jy, ix,anchor_size_idx + n_anchratios * anchor_ratio_idx] = 1
                         # -y_rpn_overlap[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 1
                         y_rpn_overlap[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 1
-                        # Defaulted as 36, the old code is the wrong number of 44 
+                        # Defaulted as 48 
                         # -start = 4 * (anchor_ratio_idx + n_anchratios * anchor_size_idx)
                         start = 4 * (anchor_size_idx + n_anchratios * anchor_ratio_idx)
                         y_rpn_regr[jy, ix, start:start+4] = best_regr
