@@ -165,8 +165,8 @@ def calc_rpn(C, img_data, width, height, resized_width, resized_height, img_leng
 
                             # All GT boxes should be mapped to an anchor box, so we keep track of which anchor box was best
                             if curr_iou > best_iou_for_bbox[bbox_num]:
-                                # -best_anchor_for_bbox[bbox_num] = [jy, ix, anchor_ratio_idx, anchor_size_idx]
-                                best_anchor_for_bbox[bbox_num] = [jy, ix, anchor_size_idx, anchor_ratio_idx]
+                                best_anchor_for_bbox[bbox_num] = [jy, ix, anchor_ratio_idx, anchor_size_idx]
+                                # -best_anchor_for_bbox[bbox_num] = [jy, ix, anchor_size_idx, anchor_ratio_idx]
                                 best_iou_for_bbox[bbox_num] = curr_iou
                                 best_x_for_bbox[bbox_num,:] = [x1_anc, x2_anc, y1_anc, y2_anc]
                                 best_dx_for_bbox[bbox_num,:] = [tx, ty, tw, th]
@@ -192,23 +192,23 @@ def calc_rpn(C, img_data, width, height, resized_width, resized_height, img_leng
                     # pos: the box has RPN
                     # neutral: normal box with a RPN
                     if bbox_type == 'neg':
-                        # -y_is_box_valid[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 1
-                        y_is_box_valid[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 1
-                        # -y_rpn_overlap[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 0
-                        y_rpn_overlap[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 0
+                        y_is_box_valid[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 1
+                        # -y_is_box_valid[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 1
+                        y_rpn_overlap[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 0
+                        # -y_rpn_overlap[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 0
                     elif bbox_type == 'neutral':
-                        # -y_is_box_valid[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 0
-                        y_is_box_valid[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 0
-                        # -y_rpn_overlap[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 0
-                        y_rpn_overlap[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 0
+                        y_is_box_valid[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 0
+                        # -y_is_box_valid[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 0
+                        y_rpn_overlap[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 0
+                        # -y_rpn_overlap[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 0
                     elif bbox_type == 'pos':
-                        # -y_is_box_valid[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 1
-                        y_is_box_valid[jy, ix,anchor_size_idx + n_anchratios * anchor_ratio_idx] = 1
-                        # -y_rpn_overlap[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 1
-                        y_rpn_overlap[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 1
-                        # Defaulted as 48 
-                        # -start = 4 * (anchor_ratio_idx + n_anchratios * anchor_size_idx)
-                        start = 4 * (anchor_size_idx + n_anchratios * anchor_ratio_idx)
+                        y_is_box_valid[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 1
+                        # -y_is_box_valid[jy, ix,anchor_size_idx + n_anchratios * anchor_ratio_idx] = 1
+                        y_rpn_overlap[jy, ix, anchor_ratio_idx + n_anchratios * anchor_size_idx] = 1
+                        # -y_rpn_overlap[jy, ix, anchor_size_idx + n_anchratios * anchor_ratio_idx] = 1
+                        # Defaulted as 36, the old code is the wrong number of 44 
+                        start = 4 * (anchor_ratio_idx + n_anchratios * anchor_size_idx)
+                        # -start = 4 * (anchor_size_idx + n_anchratios * anchor_ratio_idx)
                         y_rpn_regr[jy, ix, start:start+4] = best_regr
 
     # Ensure that every bbox has at least one positive RPN region
@@ -251,7 +251,8 @@ def calc_rpn(C, img_data, width, height, resized_width, resized_height, img_leng
         num_pos = num_regions/2
 
     if len(neg_locs[0]) + num_pos > num_regions:
-        val_locs = random.sample(range(len(neg_locs[0])), len(neg_locs[0]) - num_pos)
+        # -val_locs = random.sample(range(len(neg_locs[0])), len(neg_locs[0]) - num_pos)
+        val_locs = random.sample(range(len(neg_locs[0])), len(neg_locs[0]) - (num_regions - num_pos))
         y_is_box_valid[0, neg_locs[0][val_locs], neg_locs[1][val_locs], neg_locs[2][val_locs]] = 0
 
     y_rpn_cls = np.concatenate([y_is_box_valid, y_rpn_overlap], axis=1)
