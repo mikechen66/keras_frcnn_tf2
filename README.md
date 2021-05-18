@@ -201,11 +201,11 @@ After a success run, users can set them to a large number to optimize the tainni
 
 3nd. Correct the code in data_generators.py 
 
-The runtime is improved greatly and the accuracy is also enhanced tremendously. 
+    The runtime is improved greatly and the accuracy is also enhanced tremendously. 
 
-Delete the wrong line of code: 
--val_locs = random.sample(range(len(neg_locs[0])), len(neg_locs[0]) - num_pos)
-Add the correct line of code:
-val_locs = random.sample(range(len(neg_locs[0])), len(neg_locs[0]) - (num_regions - num_pos))
+    Delete the wrong line of code: 
+    -val_locs = random.sample(range(len(neg_locs[0])), len(neg_locs[0]) - num_pos)
+    Add the correct line of code:
+    val_locs = random.sample(range(len(neg_locs[0])), len(neg_locs[0]) - (num_regions - num_pos))
 
 **That's all, help you enjoy!**
