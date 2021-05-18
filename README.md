@@ -154,27 +154,32 @@ After a success run, users can set them to a large number to optimize the tainni
 
     Epoch 1/10
     2021-04-28 14:08
-    1/10 [==>...........................] - ETA: 3:34 - rpn_cls: 5.1244 - rpn_regr: 0.9318  
-    2/10 [=====>........................] - ETA: 2:34 - rpn_cls: 5.0801 - rpn_regr: 0.9644 - detector_cls: 2.3001 - detector_regr: 0.3942
-    3/10 [========>.....................] - ETA: 2:10 - rpn_cls: 5.0417 - rpn_regr: 0.9217
+    1/10 [==>...........................] - ETA: 3:27 - rpn_cls: 9.5235 - rpn_regr: 0.8175  
+    2/10 [=====>........................] - ETA: 2:26 - rpn_cls: 9.5661 - rpn_regr: 0.8448 - detector_cls: 2.2996 - detector_regr: 0.3951
+    3/10 [========>.....................] - ETA: 1:41 - rpn_cls: 9.4287 - rpn_regr: 0.7807 - detector_cls: 2.2964 - detector_regr: 0.4211
     ........
 
     Epoch 8/10
     Average number of overlapping bounding boxes from RPN = 2.0 for 10 previous iterations
-    1/10 [==>...........................] - ETA: 33s - rpn_cls: 7.6447 - rpn_regr: 0.2620  
-    2/10 [=====>........................] - ETA: 27s - rpn_cls: 6.3826 - rpn_regr: 0.3558 
-    3/10 [========>.....................] - ETA: 21s - rpn_cls: 6.4132 - rpn_regr: 0.3519 - detector_cls: 0.2926 - detector_regr: 0.4456
+    1/10 [==>...........................] - ETA: 1:01 - rpn_cls: 1.9340 - rpn_regr: 0.1092  
+    2/10 [=====>........................] - ETA: 42s - rpn_cls: 2.2123 - rpn_regr: 0.1378 - detector_cls: 0.4928 - detector_regr: 0.4933
+    3/10 [========>.....................] - ETA: 43s - rpn_cls: 2.1131 - rpn_regr: 0.1400
+    
     ........
 
     Average number of overlapping bounding boxes from RPN = 1.6 for 10 previous iterations
-    10/10 [==============================] - 94s 9s/step - rpn_cls: 4.8054 - rpn_regr: 0.5197 - detector_cls: 0.3994 - detector_regr: 0.5194
-    Mean number of bounding boxes from RPN overlapping ground truth boxes: 1.391304347826087
-    Classifier accuracy for bounding boxes from RPN: 0.9
-    Loss RPN classifier: 4.342926752567291
-    Loss RPN regression: 0.42844736129045485
-    Loss Detector classifier: 0.45890533179044724
-    Loss Detector regression: 0.4877036601305008
-    Elapsed time: 94.26770877838135
+    8/10 [=======================>......] - ETA: 15s - rpn_cls: 1.8296 - rpn_regr: 0.2392 
+    9/10 [==========================>...] - ETA: 7s - rpn_cls: 1.8296 - rpn_regr: 0.2419 - detector_cls: 0.4357 - detector_regr: 0.3452
+    10/10 [==============================] - 79s 8s/step - rpn_cls: 1.8336 - rpn_regr: 0.2432 - detector_cls: 0.4441 - detector_regr: 0.3483
+    Mean number of bounding boxes from RPN overlapping ground truth boxes: 2.55
+    Classifier accuracy for bounding boxes from RPN: 0.840625
+    Loss RPN classifier: 1.8696473240852356
+    Loss RPN regression: 0.25528666824102403
+    Loss Detector classifier: 0.5204675108194351
+    Loss Detector regression: 0.3761039458215237
+    Elapsed time: 79.11395478248596
+    Training complete, exiting.
+
 
 ## Issues 
 
@@ -193,5 +198,14 @@ After a success run, users can set them to a large number to optimize the tainni
     2.4. It is not useful to set dtype='float32' in either numpy or keras code in all avaiable scripts. So it is hard to make an improvement right now. 
 
     TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
+
+3nd. Correct the code in data_generators.py 
+
+The runtime is improved greatly and the accuracy is also enhanced tremendously. 
+
+Delete the wrong line of code: 
+-val_locs = random.sample(range(len(neg_locs[0])), len(neg_locs[0]) - num_pos)
+Add the correct line of code:
+val_locs = random.sample(range(len(neg_locs[0])), len(neg_locs[0]) - (num_regions - num_pos))
 
 **That's all, help you enjoy!**
