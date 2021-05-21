@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+"""
+Exception: in user code:
+return step_function(self, iterator)
+x = y_true[:, :, 4*num_classes:] - y_pred
+raise e
+TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
+"""
+
 from keras import backend as K
 from keras.objectives import categorical_crossentropy
 
@@ -44,6 +55,7 @@ def rpn_loss_cls(num_anchors):
 
 def class_loss_regr(num_classes):
     def class_loss_regr_fixed_num(y_true, y_pred):
+        # TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
         x = y_true[:, :, 4*num_classes:] - y_pred
         x_abs = K.abs(x)
         x_bool = K.cast(K.less_equal(x_abs, 1.0), 'float32')
