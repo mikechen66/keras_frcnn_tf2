@@ -199,11 +199,9 @@ After a success run, users can set them to a large number to optimize the tainni
     
     Exception: in user code:
     return step_function(self, iterator)
-    /Documents/keras_frcnn/keras_frcnn/losses.py:47 class_loss_regr_fixed_num  *
+    /Documents/keras_frcnn/keras_frcnn/losses.py:59 class_loss_regr_fixed_num  *
         x = y_true[:, :, 4*num_classes:] - y_pred
     raise e
-    TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
-
     TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
 
 3nd. Correct the code in data_generators.py 
