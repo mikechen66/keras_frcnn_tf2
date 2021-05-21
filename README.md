@@ -204,7 +204,7 @@ After a success run, users can set them to a large number to optimize the tainni
     raise e
     TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
     
-    It is not useful to cast the expression with float32
+    It is not useful to cast the expression with float32 as following. 
     x = K.cast((y_true[:, :, 4*num_classes:] - y_pred), 'float32')
 
 3nd. Correct the code in data_generators.py 
