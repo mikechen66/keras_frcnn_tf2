@@ -3,11 +3,28 @@
 
 """
 Exception: in user code:
-return step_function(self, iterator)
-x = y_true[:, :, 4*num_classes:] - y_pred
-raise e
-TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
+
+/home/mic/miniconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/training.py:806 train_function  *
+        return step_function(self, iterator)
+/home/mic/Documents/keras_frcnn/keras_frcnn/losses.py:47 class_loss_regr_fixed_num  *
+        x = y_true[:, :, 4*num_classes:] - y_pred
+/home/mic/miniconda3/lib/python3.7/site-packages/tensorflow/python/ops/math_ops.py:1140 binary_op_wrapper
+        raise e
+
+/home/mic/miniconda3/lib/python3.7/site-packages/tensorflow/python/ops/math_ops.py:1124 binary_op_wrapper
+        return func(x, y, name=name)
+/home/mic/miniconda3/lib/python3.7/site-packages/tensorflow/python/util/dispatch.py:201 wrapper
+        return target(*args, **kwargs)
+/home/mic/miniconda3/lib/python3.7/site-packages/tensorflow/python/ops/math_ops.py:526 subtract
+        return gen_math_ops.sub(x, y, name)
+/home/mic/miniconda3/lib/python3.7/site-packages/tensorflow/python/ops/gen_math_ops.py:10466 sub
+        "Sub", x=x, y=y, name=name)
+/home/mic/miniconda3/lib/python3.7/site-packages/tensorflow/python/framework/op_def_library.py:506 _apply_op_helper
+        inferred_from[input_arg.type_attr]))
+
+    TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
 """
+
 
 from keras import backend as K
 from keras.objectives import categorical_crossentropy
@@ -56,6 +73,7 @@ def rpn_loss_cls(num_anchors):
 def class_loss_regr(num_classes):
     def class_loss_regr_fixed_num(y_true, y_pred):
         # TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
+        # -x = K.cast((y_true[:, :, 4*num_classes:] - y_pred), 'float32')
         x = y_true[:, :, 4*num_classes:] - y_pred
         x_abs = K.abs(x)
         x_bool = K.cast(K.less_equal(x_abs, 1.0), 'float32')
