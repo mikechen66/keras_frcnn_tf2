@@ -194,8 +194,15 @@ After a success run, users can set them to a large number to optimize the tainni
 
 2nd. Floating incompatibility issue
 
-    There is a floating incompatibility issue during the training. It might be an issue related to the new scripts related to TensorFlow 2.3 and Keras 
-    2.4. It is not useful to set dtype='float32' in either numpy or keras code in all avaiable scripts. So it is hard to make an improvement right now. 
+    There is a floating incompatibility issue during the training. It shows the error in losses.py  It is not useful to set dtype='float32' in either numpy or keras code in all avaiable
+    scripts. So it is hard to make an improvement right now. 
+    
+    Exception: in user code:
+    return step_function(self, iterator)
+    /Documents/keras_frcnn/keras_frcnn/losses.py:47 class_loss_regr_fixed_num  *
+        x = y_true[:, :, 4*num_classes:] - y_pred
+    raise e
+    TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
 
     TypeError: Input 'y' of 'Sub' Op has type float32 that does not match type int64 of argument 'x'.
 
