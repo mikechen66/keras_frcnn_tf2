@@ -10,7 +10,7 @@ touch. Pllease have a look at the project_tree for understanding the strcture.
 The scripts are upgraded to support Python3.7. It is very necessary for users to intall compatible opencv-python and 
 opencv-contrib-python versions in order to prevent QT errors. The following versions are recommended to be installed. 
 
-* TensorFlow 2.3
+* TensorFlow 2.4 at least 
 * Keras 2.4
 * opencv-python==4.1.1.26
 * opencv-contrib-python==4.1.1.26
