@@ -2,8 +2,8 @@
 
 ## Update
 
-The applications is upgraded to support both TensorFlow 2.3 keras 2.4. If you have any issues, please keep in touch. 
-Pllease have a look at the project_tree for understanding the strcture. 
+The applications is upgraded to support both TensorFlow 2.4 and keras 2.4. If you have any issues, please keep in 
+touch. Pllease have a look at the project_tree for understanding the strcture. 
 
 ## Requirements
 
